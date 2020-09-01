@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="views/layout/base-layout">
+      layout:decorate="~{views/layout/base-layout}">
 <div layout:fragment="body">
     <section class="content">
         <div class="container-fluid">
             <img src="https://www.sammobile.com/wp-content/uploads/2019/03/keyguard_default_wallpaper.png"
                  th:src="${image}"
-                 display= "block"
-                 margin-left= "auto"
-                 margin-right= "auto"
+                 display="block"
+                 margin-left="auto"
+                 margin-right="auto"
                  width="40%"
                  class="img-responsive figure-img"
             >

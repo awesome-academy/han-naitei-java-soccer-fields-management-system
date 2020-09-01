@@ -5,15 +5,14 @@ import app.service.UserService;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class UserServiceImpl extends BaseServiceImpl implements UserService {
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
 
     @Override
-    public User findById(Serializable key) {
+    public User findById(Serializable key, boolean lock) {
         try {
-            return getUserDAO().findById(key);
+            return getUserDAO().findById(key, lock);
         } catch (Exception e) {
             logger.error("failed", e);
             return null;
@@ -31,9 +30,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     }
 
     @Override
-    public User saveOrUpdate(User entity) {
+    public boolean saveOrUpdate(User entity) {
         try {
-            return getUserDAO().saveOrUpdate(entity);
+            getUserDAO().saveOrUpdate(entity);
+            return true;
         } catch (Exception e) {
             logger.error("failed!", e);
             throw e;

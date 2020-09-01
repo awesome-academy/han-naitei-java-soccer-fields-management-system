@@ -14,15 +14,27 @@ public abstract class GenericDAO<PK extends Serializable, T> extends HibernateDa
     @Autowired
     private SessionFactory sessionFactory;
 
+    private final Class<T> persistentClass;
+
+    public GenericDAO(Class<T> persistentClass) {
+        this.persistentClass = persistentClass;
+    }
+
+    @SuppressWarnings("unchecked")
+    public GenericDAO() {
+        this.persistentClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass())
+                .getActualTypeArguments()[1];
+    }
+
     public T findById(Serializable key) {
         return findById(key, true);
     }
 
     public T findById(Serializable key, boolean lock) {
         if (lock) {
-            return (T) getSession().load(getPersistentClass(), key, LockMode.PESSIMISTIC_WRITE);
+            return getSession().load(getPersistentClass(), key, LockMode.PESSIMISTIC_READ);
         } else {
-            return (T) getSession().get(getPersistentClass(), key);
+            return getSession().get(getPersistentClass(), key);
         }
     }
 
@@ -39,24 +51,11 @@ public abstract class GenericDAO<PK extends Serializable, T> extends HibernateDa
         return entity;
     }
 
-    private Class<T> persistentClass;
-
     public Class<T> getPersistentClass() {
         return persistentClass;
-    }
-
-    public GenericDAO(Class<T> persistentClass) {
-        this.persistentClass = persistentClass;
-    }
-
-    @SuppressWarnings("unchecked")
-    public GenericDAO() {
-        this.persistentClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass())
-                .getActualTypeArguments()[1];
     }
 
     protected Session getSession() {
         return sessionFactory.getCurrentSession();
     }
-
 }

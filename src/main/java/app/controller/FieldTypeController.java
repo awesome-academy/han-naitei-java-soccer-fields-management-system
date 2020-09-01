@@ -1,103 +1,131 @@
 package app.controller;
 
+import app.info.FieldTypeInfo;
 import app.model.FieldType;
+import app.service.FieldTypeService;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.persistence.NamedStoredProcedureQuery;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("field-types")
 public class FieldTypeController {
     private static final Logger logger = Logger.getLogger(FieldTypeController.class);
 
-    @GetMapping()
+    private final FieldTypeService fieldTypeService;
+
+    @Autowired
+    public FieldTypeController(FieldTypeService fieldTypeService) {
+        this.fieldTypeService = fieldTypeService;
+    }
+
+    @GetMapping(path = "/field-types")
     public ModelAndView index() {
         logger.info("Index");
         ModelAndView model = new ModelAndView("views/field-types/index");
-        // TO DO
-        // GET FIELD LIST, ADD TO MODEL
-        Map<String, String> fieldType1 = new HashMap<String, String>();
-        Map<String, String> fieldType2 = new HashMap<String, String>();
         String title = "Field Type List";
-        fieldType1.put("Name", "Sân dỏm");
-        fieldType2.put("Name", "Sân xịn");
-        ArrayList<Map<String, String>> data = new ArrayList<>();
-        data.add(fieldType1);
-        data.add(fieldType2);
-        logger.info(data);
+
         model.addObject("title", title);
-        model.addObject("data", data);
+        model.addObject("data", fieldTypeService.loadFieldTypes());
         return model;
     }
 
-    @GetMapping("/create")
+    @GetMapping(path = "/field-types/{id}")
+    public String show(@PathVariable("id") int id, Model model, final RedirectAttributes redirectAttributes) {
+        logger.info("Show");
+        String title = "Field Type Details";
+
+        FieldType fieldType = fieldTypeService.findById(id, false);
+        if (fieldType == null) {
+            redirectAttributes.addFlashAttribute("status", "error");
+            redirectAttributes.addFlashAttribute("message", "Field type not found.");
+            return "redirect:/field-types";
+        }
+
+        model.addAttribute("title", title);
+        model.addAttribute("data", fieldType);
+
+        return "views/field-types/show";
+    }
+
+    @GetMapping(path = "/field-types/create")
     public String create(Model model) {
         logger.info("Create");
-        // TO DO
-        // Bind data to thymeleaf form
+        String title = "Create New Field Type";
+
+        FieldTypeInfo fieldTypeInfo = new FieldTypeInfo();
+
+        model.addAttribute("title", title);
+        model.addAttribute("fieldTypeForm", fieldTypeInfo);
+
         return "views/field-types/create";
     }
 
-    @PostMapping()
-    public String post(Model model, @PathVariable Integer id) {
-        logger.info("Post");
-        // TO DO
-        // Create Logic
-        // Redirect after create
-        return "redirect: /field-types";
-    }
-
-    @DeleteMapping()
-    public String delete(Model model, @PathVariable Integer id) {
-        logger.info("Delete");
-        // TO DO
-        // Create Logic
-        // Redirect after Delete
-        return "redirect: /field-types";
-    }
-
-    @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable Integer id) {
+    @GetMapping(path = "/field-types/{id}/edit")
+    public String edit(@PathVariable("id") int id, Model model) {
         logger.info("Edit");
-        // TO DO
-        // GET FIELD TYPE BY ID, PASS TO MODEL, RENDER TO VIEW
-        Map<String, String> data = new HashMap<String, String>();
-        String title = "Field Type";
-        data.put("Name", "Sân dỏm");
+        String title = "Edit Field Type";
+
+        FieldType fieldType = fieldTypeService.findById(id, true);
+
+        FieldTypeInfo fieldTypeInfo = new FieldTypeInfo(fieldType.getId(), fieldType.getName(), fieldType.getDescription(), fieldType.getPhotoURL());
+
         model.addAttribute("title", title);
-        model.addAttribute("data", data);
+        model.addAttribute("fieldTypeForm", fieldTypeInfo);
+
         return "views/field-types/edit";
     }
 
+    @GetMapping(path = "/field-types/{id}/delete")
+    public String delete(@PathVariable("id") int id, final RedirectAttributes redirectAttributes) {
+        logger.info("DELETE");
 
-    @PatchMapping("/{id}/edit")
-    public String patch(Model model, @PathVariable Integer id) {
-        logger.info("Patch");
-        // TO DO
-        // GET FIELD TYPE BY ID, PASS TO MODEL, RENDER TO VIEW
-        // Edit the resource
-        // Redirect to show page
-        return "redirect: /field-types/" + id;
+        if (fieldTypeService.deleteFieldType(id)) {
+            redirectAttributes.addFlashAttribute("status", "success");
+            redirectAttributes.addFlashAttribute("message", "Field type deleted.");
+        } else {
+            redirectAttributes.addFlashAttribute("status", "error");
+            redirectAttributes.addFlashAttribute("message", "Error deleting field type.");
+        }
+
+        return "redirect:/field-types";
     }
 
-    @GetMapping("/{id}")
-    public String show(Model model, @PathVariable Integer id) {
-        // TO DO
-        // GET FIELD TYPE BY ID, PASS TO MODEL, RENDER TO VIEW
-        logger.info("Show");
-        Map<String, String> data = new HashMap<String, String>();
-        String title = "Field Type";
-        data.put("Name", "Sân xịn");
-        model.addAttribute("title", title);
-        model.addAttribute("data", data);
-        return "views/field-types/show";
+    @PostMapping(path = "/field-types")
+    public String post(FieldTypeInfo fieldTypeInfo, final RedirectAttributes redirectAttributes) {
+        logger.info("POST");
+
+        fieldTypeInfo.setId(null);
+
+        if (fieldTypeService.saveOrUpdate(fieldTypeInfo.toFieldType())) {
+            redirectAttributes.addFlashAttribute("status", "success");
+            redirectAttributes.addFlashAttribute("message", "Field type created.");
+        } else {
+            redirectAttributes.addFlashAttribute("status", "error");
+            redirectAttributes.addFlashAttribute("message", "Error deleting field type.");
+        }
+
+        return "redirect:/field-types";
+    }
+
+    @PutMapping(path = "/field-types/{id}")
+    public String put(@PathVariable("id") int id, FieldTypeInfo fieldTypeInfo, final RedirectAttributes redirectAttributes) {
+        logger.info("PUT");
+
+        if (fieldTypeService.saveOrUpdate(fieldTypeInfo.toFieldType())) {
+            redirectAttributes.addFlashAttribute("status", "success");
+            redirectAttributes.addFlashAttribute("message", "Field type details updated.");
+        } else {
+            redirectAttributes.addFlashAttribute("status", "error");
+            redirectAttributes.addFlashAttribute("message", "Error updating field type details.");
+        }
+
+        return "redirect:/field-types/" + id;
     }
 }

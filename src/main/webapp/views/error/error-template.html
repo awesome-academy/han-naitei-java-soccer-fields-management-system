@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="views/layout/base-layout">
+      layout:decorate="~{views/layout/base-layout}">
 <div layout:fragment="body">
     <h2 class="error-page" th:text="${errorMsg}">ERROR HERE</h2>
 </div>

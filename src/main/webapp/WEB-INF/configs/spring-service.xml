@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
 
-	<!-- Declare Service here-->
-	<!--		TODO -->
-	<bean id="UserService" parent="baseTransactionProxy">
-		<property name="target">
-			<bean class="app.service.impl.UserServiceImpl">
-				<property name="userDAO" ref="userDAO" />
-			</bean>
-		</property>
-	</bean>
+    <!-- Declare Service here-->
+    <bean id="UserService" parent="baseTransactionProxy">
+        <property name="target">
+            <bean class="app.service.impl.UserServiceImpl">
+                <property name="userDAO" ref="userDAO" />
+            </bean>
+        </property>
+    </bean>
 
-	<bean id="myUserDetailsService" parent="baseTransactionProxy">
-		<property name="target">
-			<bean class="app.service.impl.MyUserDetailsServiceImpl">
-				<property name="userDAO" ref="userDAO" />
-			</bean>
-		</property>
-	</bean>
+    <bean id="myUserDetailsService" parent="baseTransactionProxy">
+        <property name="target">
+            <bean class="app.service.impl.MyUserDetailsServiceImpl">
+                <property name="userDAO" ref="userDAO" />
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="FieldTypeService" parent="baseTransactionProxy">
+        <property name="target">
+            <bean class="app.service.impl.FieldTypeServiceImpl">
+                <property name="fieldTypeDAO" ref="fieldTypeDAO" />
+            </bean>
+        </property>
+    </bean>
 
 </beans>

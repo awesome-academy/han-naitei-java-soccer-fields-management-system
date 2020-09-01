@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="views/layout/base-layout">
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{views/layout/base-layout}">
+
 <div layout:fragment="body">
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">List Field Type</h1>
-                    <a th:href="@{/field-types/create}" type="button" class="btn btn-sm btn-primary">
-                        Create
+                    <h1 class="m-0 text-dark">Field Type List</h1>
+                    <a class="btn btn-info" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/field-types/create}"
+                       type="button">
+                        Create New
                     </a>
                 </div>
             </div>
@@ -25,21 +28,25 @@
                                    class="table table-bordered js--dataTable">
                                 <thead>
                                 <tr>
+                                    <th scope="col">#</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col"></th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <th:block th:each="fieldType,iter : ${data}">
-                                    <!-- TODO: Map with real data instead of Map  -->
-                                    <tr th:style="${iter.odd}? 'background-color: #ccc;'">
-                                        <th:block th:each="info : ${fieldType}">
-                                            <td th:text="${info.value}"></td>
-                                        </th:block>
+                                    <tr th:style="${iter.odd}? 'background-color: #efeded;'">
+                                        <th scope="row" th:text="${fieldType.id}"></th>
+                                        <td th:text="${fieldType.name}"></td>
+                                        <td th:text="${fieldType.description}"></td>
                                         <td>
-                                            <a th:href="@{'/field-types/' + ${iter.index}}" class="btn btn-primary">Detail</a>
-                                            <a th:href="@{'/field-types/' + ${iter.index} + '/edit'}" class="btn btn-warning">Edit</a>
-                                            <a class="btn btn-danger">Delete</a>
+                                            <a class="btn btn-outline-primary"
+                                               th:href="@{'/field-types/' + ${fieldType.id}}">Details</a>
+                                            <a class="btn btn-outline-dark" sec:authorize="hasRole('ROLE_ADMIN')"
+                                               th:href="@{'/field-types/' + ${fieldType.id} + '/edit'}">Edit</a>
+                                            <a class="btn btn-outline-danger" sec:authorize="hasRole('ROLE_ADMIN')"
+                                               th:href="@{'/field-types/' + ${fieldType.id} + '/delete'}">Delete</a>
                                         </td>
                                     </tr>
                                 </th:block>
@@ -53,3 +60,11 @@
     </section>
 </div>
 </html>
+
+<script>
+    const status = "[[${status}]]";
+    const message = "[[${message}]]";
+
+    if (status && message)
+        showToast(status, message);
+</script>

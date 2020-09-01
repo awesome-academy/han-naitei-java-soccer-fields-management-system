@@ -1,29 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="views/layout/base-layout">
+      layout:decorate="~{views/layout/base-layout}">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/assets/css/field-types/show.styles.css}" />
+</head>
+
 <div layout:fragment="body">
     <section class="content">
+        <div class="intro-section">
+            <div th:class="intro-section--background"
+                 th:style="'background-image: url(' + @{${data.photoURL}} + ');'"></div>
+            <div class="intro-section--content">
+                <span class="intro-section--title" th:text="${data.name}">Field Type Name</span>
+                <span class="intro-section--subtitle" th:text="${data.description}">Field Type Description</span>
+            </div>
+        </div>
         <div class="container-fluid">
             <div class="card card-primary">
                 <div class="card-header">
-                    <h3 class="card-title" th:text="${title}">Field</h3>
+                    <h3 class="card-title" th:text="${title}">Field Type Details</h3>
                 </div>
-                <!-- /.card-header -->
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table">
-                            <th:block th:each="info : ${data}">
-                                <tr>
-                                    <th style="width:50%" th:text="${info.key}">Subtotal</th>
-                                    <td th:text="${info.value}">Lorem ipsum dolor sit amet</td>
-                                </tr>
-                            </th:block>
+                            <tbody>
+                            <tr>
+                                <td>Name</td>
+                                <td th:text="${data.name}" />
+                            </tr>
+                            <tr>
+                                <td>Description</td>
+                                <td th:text="${data.description}" />
+                                </td>
+                            </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
 </div>
 </html>
+
+<script>
+    const status = "[[${status}]]";
+    const message = "[[${message}]]";
+
+    if (status && message)
+        showToast(status, message);
+</script>

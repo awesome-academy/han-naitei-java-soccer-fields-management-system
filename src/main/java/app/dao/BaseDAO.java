@@ -7,5 +7,5 @@ public interface BaseDAO<PK, T> {
 
 	T saveOrUpdate(T entity);
 
-	T findById(Serializable key);
+	T findById(Serializable key, boolean lock);
 }

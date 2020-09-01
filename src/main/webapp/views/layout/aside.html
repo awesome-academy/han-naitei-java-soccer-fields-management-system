@@ -1,6 +1,9 @@
 <!-- sidebar: style can be found in sidebar.less -->
-<div class="sidebar" th:fragment="aside" xmlns:sec="http://www.w3.org/1999/xhtml">
+<div class="sidebar" th:fragment="aside"
+     xmlns:th="http://www.w3.org/1999/xhtml"
+     xmlns:sec="http://www.w3.org/1999/xhtml">
     <a href="#" th:href="@{/}" class="brand-link">
+
         <span class="brand-text font-weight-light">Football Management</span>
     </a>
 
@@ -14,9 +17,9 @@
                          alt="User Image">
                 </div>
 
-                    <div class="info">
-                        <a href="#" class="d-block">Anonymous</a>
-                    </div>
+                <div class="info">
+                    <a href="#" class="d-block">Anonymous</a>
+                </div>
             </div>
         </div>
         <div sec:authorize="isAuthenticated()">
