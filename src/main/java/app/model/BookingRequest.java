@@ -4,6 +4,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,12 +20,10 @@ public class BookingRequest {
 
     @Column(name = "from_date")
     @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
     private Date fromDate;
 
     @Column(name = "to_date")
     @Temporal(TemporalType.TIMESTAMP)
-    @UpdateTimestamp
     private Date toDate;
 
     @ManyToOne

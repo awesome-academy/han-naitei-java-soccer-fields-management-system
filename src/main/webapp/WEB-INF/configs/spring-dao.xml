@@ -13,4 +13,7 @@
     <bean id="fieldDAO" class="app.dao.impl.FieldDAOImpl">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
+    <bean id="bookingRequestDAO" class="app.dao.impl.BookingRequestDAOImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
 </beans>

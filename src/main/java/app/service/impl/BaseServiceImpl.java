@@ -1,5 +1,6 @@
 package app.service.impl;
 
+import app.dao.BookingRequestDAO;
 import app.dao.FieldDAO;
 import app.dao.FieldTypeDAO;
 import app.dao.UserDAO;
@@ -14,6 +15,9 @@ public class BaseServiceImpl {
 
     @Autowired
     private FieldDAO fieldDAO;
+
+    @Autowired
+    private BookingRequestDAO bookingRequestDAO;
 
     public UserDAO getUserDAO() {
         return userDAO;
@@ -37,5 +41,13 @@ public class BaseServiceImpl {
 
     public void setFieldDAO(FieldDAO fieldDAO) {
         this.fieldDAO = fieldDAO;
+    }
+
+    public BookingRequestDAO getBookingRequestDAO() {
+        return bookingRequestDAO;
+    }
+
+    public void setBookingRequestDAO(BookingRequestDAO bookingRequestDAO) {
+        this.bookingRequestDAO = bookingRequestDAO;
     }
 }

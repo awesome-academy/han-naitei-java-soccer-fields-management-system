@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{views/layout/base-layout}">
+
+<div layout:fragment="body">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Booking Request List</h1>
+                 </div>
+<!--                <div class="col-sm-6">-->
+<!--                    <form class="form-inline ml-3 float-right " th:action="@{/fields}" method="get">-->
+<!--                        <div class="input-group input-group-sm">-->
+<!--                            <input class="form-control form-control-navbar"-->
+<!--                                   type="search" placeholder="Search" aria-label="Search"-->
+<!--                                   name="search" id="search"-->
+<!--                            >-->
+<!--                            <div class="input-group-append">-->
+<!--                                <button class="btn btn-primary" type="submit">-->
+<!--                                    <i class="fas fa-search"></i>-->
+<!--                                </button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </form>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table data-model="fields"
+                                   class="table table-bordered js--dataTable">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">From Date</th>
+                                    <th scope="col">To Date</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <th:block th:each="bookingRequest,iter : ${data}">
+                                    <tr th:style="${iter.odd}? 'background-color: #efeded;'">
+                                        <th scope="row" th:text="${bookingRequest.id}"></th>
+                                        <td th:text="${bookingRequest.user.email}">Email</td>
+                                        <td th:text="${bookingRequest.fromDate}"></td>
+                                        <td th:text="${bookingRequest.toDate}"></td>
+                                        <td>
+                                            <a class="btn btn-outline-secondary"
+                                               th:href="@{'/booking-requests/' + ${bookingRequest.id}}">Details</a>
+                                            <a class="btn btn-outline-dark" sec:authorize="hasRole('ROLE_ADMIN')"
+                                               th:href="@{'/booking-requests/' + ${bookingRequest.id} + '/edit'}">Edit</a>
+                                            <a class="btn btn-outline-danger" sec:authorize="hasRole('ROLE_ADMIN')"
+                                               th:href="@{'/booking-requests/' + ${bookingRequest.id} + '/delete'}">Delete</a>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</html>
+
+<script>
+    const status = "[[${status}]]";
+    const message = "[[${message}]]";
+
+    if (status && message)
+        showToast(status, message);
+</script>

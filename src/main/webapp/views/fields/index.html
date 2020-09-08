@@ -67,7 +67,7 @@
                                         </td>
                                         <td>
                                             <a class="btn btn-outline-primary" sec:authorize="hasRole('ROLE_USER')"
-                                               th:href="@{'/fields/' + ${field.id} + '/bookings'}">Book</a>
+                                               th:href="@{'/fields/' + ${field.id} + '/booking-requests/new'}">Book</a>
                                             <a class="btn btn-outline-secondary"
                                                th:href="@{'/fields/' + ${field.id}}">Details</a>
                                             <a class="btn btn-outline-dark" sec:authorize="hasRole('ROLE_ADMIN')"
